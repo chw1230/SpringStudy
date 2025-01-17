@@ -10,7 +10,6 @@ public interface ArticleRepository extends CrudRepository<Article,Long> { // JPA
 
 
     // Iterable<Article> findAll(); Iterable을 ArrayList로 바꾸기!!!
-
     @Override
     ArrayList<Article> findAll();
 }
