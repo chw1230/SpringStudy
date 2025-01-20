@@ -13,7 +13,7 @@ import lombok.ToString;
 @ToString
 public class Coffee {
     @Id
-    @GeneratedValue( strategy = GenerationType.IDENTITY )
+    @GeneratedValue( strategy = GenerationType.IDENTITY ) // 자동 생성!!
     private Long id;
 
     @Column
