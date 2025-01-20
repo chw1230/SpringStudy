@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j // 로깅 위해서!
 @Service // 서비스 객체 생성 -> 해당 클래스를 서비스로 인식하고 스프링 부트에 객체 생성
@@ -62,5 +65,24 @@ public class ArticleService {
         // 3. 대상 삭제하기
         articleRepository.delete(target);
         return target; // .body(null) 대신 .build 작성해도됨!
+    }
+
+    @Transactional // 트랜젝션 어노테이션 붙이면 해당 메서드는 하나의 트랜잭션으로 묶인다!!! 그러면 중간에 실패를 하더라도 록백을 통해 이전 상태로 돌아갈 수 있음!!
+    public List<Article> createArticle(List<ArticleForm> dtos) {
+        // 1. dto 묶음음 엔티티 묶음으로 바꾸기
+        List<Article> articleList = dtos.stream() // 스트림 문법 사용하기!!!, 1번-dtos 스트림화 하기 , 4번-articleList에 저장하기
+                .map(dto -> dto.toEntity()) // 2번-map()으로 dto가 하나하나 올 때마다 dto.toEntity()를 수행해 매핑하기
+                .collect(Collectors.toList()); // 3번-이렇게 매핑한 것을 리스트로 묶기
+
+        // 2. 엔티티 묶음을 DB에 저장하기
+        articleList.stream() // 1번-스트림화 하기
+                .forEach(article -> articleRepository.save(article)); // 2번-엔티티 묶음을 DB에 저장하기
+
+        // 3. 강제로 에러 발생시키기
+        articleRepository.findById(-1L) // 1번-id를 -1인 데이터 찾기(강제 에러 빌드업)
+                .orElseThrow(() -> new IllegalArgumentException("결제 실패!")); // 2번- 찾는 데이터 없으면 예외 발생!
+
+        // 4. 결과 반환하기
+        return articleList;
     }
 }
