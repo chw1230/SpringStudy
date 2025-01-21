@@ -55,7 +55,7 @@ public class ArticleApiController {
     }
 
     @PostMapping("/api/transaction-test") // 여러 게시글 생성하는 요청 접수
-    public ResponseEntity<List<Article>> transactionTest(@RequestBody List<ArticleForm> dtos){
+    public ResponseEntity<List<Article>> transactionTest(@RequestBody List<ArticleForm> dtos){ //ArticleForm를 List로 묶은 dtos 받기, @RequestBody -> REST API 방식으로 POST 본문의 데이터 요청을 받으니까 붙여주기
         List<Article> createdList = articleService.createArticle(dtos); // 서비스 호출!!
         return (createdList != null) ? // 생성 결과에 따른 응답처리
                 ResponseEntity.status(HttpStatus.OK).body(createdList) :
