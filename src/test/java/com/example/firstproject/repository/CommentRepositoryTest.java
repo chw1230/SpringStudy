@@ -55,6 +55,54 @@ class CommentRepositoryTest {
             // 4. 비교 및 검증
             assertEquals(expected.toString(), comments.toString(),"1번 글은 댓글이 없음!");
         }
+
+        /* 경우 3 : 9번 게시글의 모든 댓글 조회 */
+        {
+            // 1. 입력 데이터 준비
+            Long articleId = 9L;
+
+            // 2. 실제 데이터 준비
+            List<Comment> comments = commentRepository.findByArticleId(articleId);
+
+            // 3. 예상 데이터 준비
+            Article article = null;
+            List<Comment> expected = Arrays.asList();
+
+            // 4. 비교 및 검증
+            assertEquals(expected.toString(),comments.toString(),"9번 글은 존재하지 않으므로 댓글이 없음!");
+        }
+
+        /* 경우 4 : 999번 게시글의 모든 댓글 조회 */
+        {
+            // 1. 입력 데이터 준비
+            Long articleId = 999L;
+
+            // 2. 실제 데이터 준비
+            List<Comment> comments = commentRepository.findByArticleId(articleId);
+
+            // 3. 예상 데이터 준비
+            Article article = null;
+            List<Comment> expected = Arrays.asList();
+
+            // 4. 비교 및 검증
+            assertEquals(expected.toString(),comments.toString(),"999번 글은 존재하지 않으므로 댓글이 없음!");
+        }
+
+        /* 경우 5 : -1번 게시글의 모든 댓글 조회 */
+        {
+            // 1. 입력 데이터 준비
+            Long articleId = -1L;
+
+            // 2. 실제 데이터 준비
+            List<Comment> comments = commentRepository.findByArticleId(articleId);
+
+            // 3. 예상 데이터 준비
+            Article article = null;
+            List<Comment> expected = Arrays.asList();
+
+            // 4. 비교 및 검증
+            assertEquals(expected.toString(),comments.toString(),"-1번 글은 존재하지 않으므로 댓글이 없음!");
+        }
     }
 
     @Test
@@ -70,13 +118,61 @@ class CommentRepositoryTest {
 
             // 3. 예상 데이터 -  DB h2-console의 Comment 테이블에서 nickname = "park" 인 애들 보고 예상 테이터 결정하기!!
             // id 에 따른 부모 게시글이 모두 다르기 떄문에 a, b, c 생성 시 article 필드에 각각 객체를 생성
-            Comment a = new Comment(2L, new Article(4L, "당신의 인생 영화는?", "댓글 적어보기~"), nickname, "비긴 어게인"); // 3-1. 예상 데이터 댓글 객체 생성
+            Comment a = new Comment(1L, new Article(4L, "당신의 인생 영화는?", "댓글 적어보기~"), nickname, "비긴 어게인"); // 3-1. 예상 데이터 댓글 객체 생성
             Comment b = new Comment(4L, new Article(5L, "당신의 소울 푸드는?", "댓글 고고링~"), nickname, "비빔밥");
             Comment c = new Comment(7L, new Article(6L, "당신의 취미는?", "댓글 고고고"), nickname, "헬스");
             List<Comment> expected = Arrays.asList(a, b, c); // 3-3. 댓글 객체를 합치기!
 
             // 4. 비교 및 검증
             assertEquals(expected.toString(), comments.toString(),"park의 모든 댓글을 출력!");
+        }
+
+        /* 경우 2 : "kim"의 모든 댓글 조회 */
+        {
+            // 1. 입력 데이터 준비
+            String nickname = "kim";
+
+            // 2. 실제 데이터
+            List<Comment> comments = commentRepository.findByNickname(nickname);
+
+            // 3. 예상 데이터
+            Comment a = new Comment(3L,new Article(4L, "당신의 인생 영화는?", "댓글 적어보기~"), nickname, "어바웃 타임");
+            Comment b = new Comment(6L,new Article(5L, "당신의 소울 푸드는?", "댓글 고고링~"), nickname, "치킨");
+            Comment c = new Comment(9L, new Article(6L, "당신의 취미는?", "댓글 고고고"), nickname, "산책");
+            List<Comment> expected = Arrays.asList(a, b, c);
+
+            // 4. 비교 및 검증
+            assertEquals(expected.toString(),comments.toString(),"kim의 모든 댓글을 출력!");
+        }
+
+        /* 경우 3 : null의 모든 댓글 조회 */
+        {
+            // 1. 입력 데이터 준비
+            String nickname = null;
+
+            // 2. 실제 데이터
+            List<Comment> comments = commentRepository.findByNickname(nickname);
+
+            // 3. 예상 데이터
+            List<Comment> expected = Arrays.asList();
+
+            // 4. 비교 및 검증
+            assertEquals(expected.toString(),comments.toString(),"null의 모든 댓글을 출력!");
+        }
+
+        /* 경우 4 : ""의 모든 댓글 조회 */
+        {
+            // 1. 입력 데이터 준비
+            String nickname = "";
+
+            // 2. 실제 데이터
+            List<Comment> comments = commentRepository.findByNickname(nickname);
+
+            // 3. 예상 데이터
+            List<Comment> expected = Arrays.asList();
+
+            // 4. 비교 및 검증
+            assertEquals(expected.toString(),comments.toString(),"\"\"의 모든 댓글을 출력!");
         }
     }
 }
