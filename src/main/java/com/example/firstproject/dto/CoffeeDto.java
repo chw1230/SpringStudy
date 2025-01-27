@@ -1,6 +1,7 @@
 package com.example.firstproject.dto;
 
 import com.example.firstproject.entity.Coffee;
+import com.example.firstproject.entity.Comment;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
 

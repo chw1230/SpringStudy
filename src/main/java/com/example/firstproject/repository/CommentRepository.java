@@ -15,7 +15,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     // 방식 1 -> @Query 어노테이션 사용
     @Query(value = "SELECT * FROM comment WHERE article_id = :articleId", nativeQuery = true) // @Query -> 메서드로 쿼리 수행을 위한 어노테이션
     // 원래는 JPQL 언어로 쿼리 처리 하지만 nativeQuery = true 를 통해서 JPQL 대신 SQL 사용가능 !!! (대신 ':' 사용)
-
     // 특정 게시글의 모든 댓글 조회
     List<Comment> findByArticleId(Long articleId);
 
