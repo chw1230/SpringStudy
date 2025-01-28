@@ -6,9 +6,7 @@ import com.example.firstproject.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,7 +23,32 @@ public class CommentApiController {
         // 결과 응답하기 - 성공하는 경우만 한정지어서 응답하기!
         return ResponseEntity.status(HttpStatus.OK).body(dtos);
     }
+
     // 2. 생성
+    @PostMapping("api/articles/{articleId}/comments")
+    public ResponseEntity<CommentDto> create(@PathVariable Long articleId, @RequestBody CommentDto dto) {
+        // 서비스에 넘기기
+        CommentDto dtos = commentService.create(articleId, dto);
+        // 결과 응답하기
+        return ResponseEntity.status(HttpStatus.OK).body(dtos);
+    }
+
     // 3. 수정
+    @PatchMapping("api/comments/{id}")
+    public ResponseEntity<CommentDto> update(@PathVariable Long id, @RequestBody CommentDto dto) {
+        // 서비스에 넘가기
+        CommentDto updated = commentService.update(id, dto);
+        // 결과 응답하기
+        return ResponseEntity.status(HttpStatus.OK).body(updated);
+    }
+
     // 4. 삭제
+    @DeleteMapping("api/comments/{id}")
+    public ResponseEntity<CommentDto> delete(@PathVariable Long id){
+        // 서비스에 넘기기
+        CommentDto deleted = commentService.delete(id);
+        // 결과 응답하기
+        return ResponseEntity.status(HttpStatus.OK).body(deleted);
+    }
+
 }

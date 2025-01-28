@@ -1,5 +1,6 @@
 package com.example.firstproject.entity;
 
+import com.example.firstproject.dto.CommentDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,4 +31,19 @@ public class Comment {
     // 4. 댓글 본문
     @Column // 테이블의 속성으로 매핑
     private String body;
+
+    public void patch(CommentDto dto) {
+        // 예외 발생
+        // url의 id와 입력 JSON 데이터 속 id가 다른 경우
+        if (this.id != dto.getId()) {
+            throw new IllegalArgumentException("댓글 수정 실패! 잘못된 id가 입력됐습니다.");
+        }
+        // 객체 갱신 (업데이트)
+        if (dto.getNickname() != null) { // 수정할 닉네임 대이터가 있다면
+            this.nickname = dto.getNickname(); // 수정
+        }
+        if (dto.getBody() != null) { // 수정할 본문 내용이 있다면
+            this.body = dto.getBody(); // 수정
+        }
+    }
 }
