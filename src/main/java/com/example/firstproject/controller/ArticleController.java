@@ -1,7 +1,9 @@
 package com.example.firstproject.controller;
 
 import com.example.firstproject.dto.ArticleForm;
+import com.example.firstproject.dto.CommentDto;
 import com.example.firstproject.entity.Article;
+import com.example.firstproject.service.CommentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,12 +15,15 @@ import com.example.firstproject.repository.ArticleRepository;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j // 로깅을 위한 어노테이션 추가!!
 @Controller // 컨트롤러 선언
 public class ArticleController {
     @Autowired // 스프링 부트가 미리 생성해 놓은 리파지터리 객체 주입(DI) -> new 로 생성할 필요없음!!
     private ArticleRepository articleRepository; // articleRepository 객체 선언
+    @Autowired
+    private CommentService commentService;
 
     @GetMapping("/articles/new") // URL 요청 접수
     public String newArticleForm() { // 메서드 생성 및 반환값 작성
@@ -49,8 +54,10 @@ public class ArticleController {
         log.info("id = " + id); // id 확인 로그 찍기
         // 1. id를 조회해 데이터 가져오기
         Article articleEntity = articleRepository.findById(id).orElse(null); // findById는 특정 엔티티의 id값을 기준으로 데이터를 찾아 Optional 타입으로 반환!! , .orElse(null) 메서드 id 값으로 데이터 찾을 때 해당 id 값이 없으면 null을 반환하라는 뜻
+        List<CommentDto> commentsDtos = commentService.comments(id); // 서비스를 이용해 조회한 댓글 목록을 List<CommentDto>타입의 commentDtos에 넣기
         // 2. 모델에 데이터 등록하기
         model.addAttribute("article", articleEntity);
+        model.addAttribute("commentsDtos", commentsDtos);
         // 3. 뷰 페이지 반환하기
         return "articles/show"; // 목록으로 돌아가기 링크를 넣을 뷰 파일!! 가서 Back 코드 추가하기!
     }
