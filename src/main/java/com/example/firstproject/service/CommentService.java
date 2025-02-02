@@ -54,7 +54,7 @@ public class CommentService {
         // 전달 값으로 IllegalArgumentException 클래스를 사용하면 메서드가 잘못됐거나 부적합한 전달값을 보냈음을 나타낸다.
 
         // 2 부모 게시글의 새 댓글 엔티티 생성하기
-        Comment comment = CommentDto.createComment(dto,article);
+        Comment comment = Comment.createComment(dto,article);
 
         // 3. 생성된 엔티티를 DB에 저장하기
         Comment created = commentRepository.save(comment);
