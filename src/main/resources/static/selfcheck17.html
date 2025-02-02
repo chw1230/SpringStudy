@@ -1,0 +1,28 @@
+<!-- 글자를 입력하고 버튼을 클릭하면 입력한 글자로 제목을 바꿔주도록 자바스크립트 활용해서 코딩하기 -->
+<html>
+<head>
+    <title>셀프체크 17</title>
+</head>
+<body>
+<h1>Hello, <span id="target">World</span></h1>
+<input type="text" id="text-input">
+<button id="send-btn">전송</button>
+    <script>
+        // 바꿀 요소 가져오기
+        const trgElement = document.querySelector("#target");
+        // 빈칸 요소 가져오기
+        const inputElement = document.querySelector("#text-input");
+        // 버튼 요소 가져오기
+        const btnElement = document.querySelector("#send-btn");
+
+        btnElement.addEventListener("click", function() {
+            // 값으로 변경
+            const str = inputElement.value;
+            // 기존에 있던 input 값 삭제
+            inputElement.value = "";
+            // 문서에 반영
+            target.innerText = str;
+        });
+    </script>
+</body>
+</html>
