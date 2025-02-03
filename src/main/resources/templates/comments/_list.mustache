@@ -1,8 +1,22 @@
-<div>
+<div id="comments-list">
     {{#commentsDtos}}
         <div class="card m-2" id="comments-{{id}}">
             <div class="card-header">
                 {{nickname}} <!--닉네임 보여주기-->
+                <!-- 수정 버튼 넣기 + modal 사용 -->
+                <!-- Button trigger modal -->
+                <button type="button"
+                        class="btn btn-sm btn-outline-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#comment-edit-modal"
+                        data-bs-id="{{id}}"
+                        data-bs-nickname="{{nickname}}"
+                        data-bs-body="{{body}}"
+                        data-bs-article-id="{{articleId}}">
+                    수정</button>
+                <!--  data-bs-toggle="modal" 클릭하면 모달이 나타나고 다시 클릭하면 사라짐(토글 역할) -->
+                <!-- data-bs-target="#exampleModal" goekd id의 모달 실행 -->
+
             </div>
             <div class="card-body">
                 {{body}} <!-- 본문 보여주기-->
@@ -10,3 +24,96 @@
         </div>
     {{/commentsDtos}}
 </div>
+<!-- Modal -->
+<div class="modal fade" id="comment-edit-modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">댓글 수정</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- 댓글 수정 폼 -->
+                <form>
+                    <!-- 닉네임 입력 -->
+                    <div class="mb-3">
+                        <label class="form-label">닉네임</label>
+                        <input type="text" class="form-control" id="edit-comment-nickname">
+                    </div>
+                    <!-- 댓글 본문 입력 -->
+                    <div class="mb-3">
+                        <label class="form-label">댓글 내용</label>
+                        <textarea type="text" class="form-control" rows="3"
+                                  id="edit-comment-body"></textarea>
+                    </div>
+                    <!--  히든 인풋 => 웹 페이지에 표시되지 않는 요소, 보이지는 않지만 값을 가지고 있어야 할 때 사용 ex> 댓글이 부모 게시글의 id 값을 가지고 있어야함. 댓글이 게시글에 종속되기 때문에 이럴 때 부모 게시글의 id를 히든 인풋으로 넣기 -->
+                        <input type="hidden" id="edit-comment-id">
+                        <input type="hidden" id="edit-comment-article-id">
+                    <!-- 전송 버튼 -->
+                    <button type="button" class="btn btn-primary"
+                            id="comment-update-btn">수정 완료</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    {
+        // 모달 요소를 선택해서 변수화 하기
+        const commentEditModal = document.querySelector("#comment-edit-modal");
+        // 모달 이벤트를 감지 했을 떄 할 행동 정하기
+        commentEditModal.addEventListener("show.bs.modal",function(event) {
+        // 여기서 "show.bs.modal"는 모달이 열리기 직전에 실행되는 이벤트를 의미함!!
+        // -> 그러니까 모달이 그냥 열리는 이벤트가 되면 함수를 실행한다. 이렇게 생각
+            // 이벤트 핸들러에서 하는 일
+
+            // 1. 트리거 버튼 선택
+            const triggerBtn = event.relatedTarget;
+            // 2. 데이터 가져오기
+            const id = triggerBtn.getAttribute("data-bs-id");
+            const nickname = triggerBtn.getAttribute("data-bs-nickname");
+            const body = triggerBtn.getAttribute("data-bs-body");
+            const articleId = triggerBtn.getAttribute("data-bs-article-id");
+            // 3. 수정 폼에 데이터 반영
+            document.querySelector("#edit-comment-nickname").value = nickname;
+            document.querySelector("#edit-comment-body").value = body;
+            document.querySelector("#edit-comment-id").value = id;
+            document.querySelector("#edit-comment-article-id").value = articleId;
+        });
+    }
+    {
+        // REST API 호출하고 응답 처리
+
+        // 수정 완료 버튼 선택
+        const commentUpdateBtn = document.querySelector("#comment-update-btn");
+        // 클릭 이벤트 처리하기
+        commentUpdateBtn.addEventListener("click",function() {
+            // 수정 댓글 객체 생성
+            const comment = {
+                id : document.querySelector("#edit-comment-id").value,
+                nickname : document.querySelector("#edit-comment-nickname").value,
+                body : document.querySelector("#edit-comment-body").value,
+                article_id : document.querySelector("#edit-comment-article-id").value
+            };
+            console.log(comment); // 로그로 객체 생성 확인
+
+            // 수정 REST API 호출
+            const url = "/api/comments/" + comment.id; // url에 댓글 수정 API 주소 저장하기!
+            fetch(url, {
+                method : "PATCH",    // PATCH  수정 요청
+                headers : {
+                    "Content-type" : "application/json"   // 데이터 전송 타입은 JSON으로
+                },
+                body : JSON.stringify(comment)  // comment 객체를 JSON 문자열로 바꿔서 본문으로
+                // 여기까지 댓글 수정완료! DB에도 저장 잘되었음 이제는 HTTP 응답을 반환하기
+            }).then(response => {
+                // HTTP 응답 코드에 따른 메시지 출력
+                const msg = (response.ok) ? "댓글이 수정되었음" : "댓글 수정 실패!";
+                alert(msg);
+                window.location.reload();
+             });
+        });
+    }
+
+</script>

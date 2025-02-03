@@ -40,7 +40,9 @@
                 articleId: document.querySelector("#new-comment-article-id").value
             };
             // 댓글 객체 출력
-            console.log(comment);// fetch() - 비동기 통신을 위한 API
+            console.log(comment);
+
+            // fetch() - 비동기 통신을 위한 API
             const url = "/api/articles/" + comment.articleId + "/comments";
             fetch(url, {
                 method: "POST", // POST 요청
@@ -48,7 +50,7 @@
                 "Content-Type": "application/json"
             },
                 body: JSON.stringify(comment) //comment 객체를 JSON 문자열로 변환해 전송
-            }).then(response => {
+            }) .then(response => {
                 // HTTP 응답 코드에 따른 메시지 출력
                 const msg = (response.ok) ? "댓글 등록 성공" : "댓글 등록 실패";
                 alert(msg); //알림창 띄우기

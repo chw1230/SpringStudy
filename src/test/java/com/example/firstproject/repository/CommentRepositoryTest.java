@@ -50,7 +50,7 @@ class CommentRepositoryTest {
 
             // 3. 예상 데이터 - DB h2-console의 Comment 테이블에서 id가 1인 애들 보고 예상 테이터 결정하기!! -> 1은 댓글이 없는걸 알게됨!
             Article article = new Article(1L, "가가가가", "1111"); // 3-2. 부모 게시글 객체 생성
-            List<Comment> expected = Arrays.asList(); // 3-3. 댓글 객체를 합치기!
+            List<Comment> expected = Arrays.asList(); // 3-3. 결과물을 봤는데 댓글 없으니까 비어있는 예상 데이터 생성
 
             // 4. 비교 및 검증
             assertEquals(expected.toString(), comments.toString(),"1번 글은 댓글이 없음!");
